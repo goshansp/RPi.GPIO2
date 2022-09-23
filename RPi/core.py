@@ -715,7 +715,7 @@ def add_event_callback(channel, callback):
     """
     Add a callback for an event already defined using add_event_detect()
     channel      - either board pin number or BCM number depending on which mode is set.
-    callback     - a callback function"
+    callback     - a callback function
 
     {compat} we do not require that the channel be setup as an input
     """
