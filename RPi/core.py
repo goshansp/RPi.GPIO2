@@ -657,7 +657,7 @@ def line_do_poll(channel, bouncetime, timeout):
             break
         if line_event_wait(channel, bouncetime, timeout):
             callbacks = _State.lines[channel].callbacks
-            for fn in callbacks():
+            for fn in callbacks:
                 fn()
         end_critical_section(channel, msg="do poll")
         time.sleep(TEN_MILLISECONDS_IN_SECONDS)
