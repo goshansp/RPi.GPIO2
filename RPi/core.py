@@ -628,7 +628,7 @@ def line_event_wait(channel, bouncetime, timeout):
         # A hack to clear the event buffer by reading a bunch of bytes
         # from the underlying file representing the GPIO line
         eventfd = _State.lines[channel].line.event_get_fd()
-        os.read(eventfd, 10000)
+        # os.read(eventfd, 10000)
         if event:
             ret = channel
 
