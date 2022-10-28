@@ -247,7 +247,7 @@ def Reset():
 
     # 1. Kill all running threads
     # 2. Close chip object fd and release any held lines
-    #       Note: Bigg critical section (gets all locks)
+    #       Note: Big critical section (gets all locks)
     cleanup()
 
     # Reset _State to default values
