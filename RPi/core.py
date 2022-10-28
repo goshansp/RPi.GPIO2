@@ -645,7 +645,7 @@ def line_thread_should_die(channel):
     return _State.lines[channel].thread.killswitch.is_set()
 
 
-TEN_MILLISECONDS_IN_SECONDS = 0.0010
+TEN_MILLISECONDS_IN_SECONDS = 0.01
 
 
 def line_do_poll(channel, bouncetime, timeout):
