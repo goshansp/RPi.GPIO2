@@ -609,26 +609,37 @@ def line_event_wait_lock(channel, bouncetime, timeout):
 def line_event_wait(channel, bouncetime, timeout):
     # Split up timeout into appropriate parts
     timeout_sec     = int(int(timeout) / 1000)
-    timeout_nsec    = (int(timeout) % 1000) * 1000
+    # timeout_nsec    = (int(timeout) % 1000) * 1000
 
     ret = None
 
     # We only care about bouncetime if it is explicitly speficied in the call to this function or if
     # this is not the first call to wait_for_edge on the specified pin
-    if bouncetime and _State.lines[channel].timestamp and \
-            time.time() - _State.lines[channel].timestamp < bouncetime:
-        pass
-    elif _State.lines[channel].line.event_wait(sec=timeout_sec, nsec=timeout_nsec):
-        _State.lines[channel].timestamp = time.time()
-        if channel not in _State.event_ls:
-            # Ensure no double appends. FIXME: should this be done outside of a poll thread?
-            _State.event_ls.append(channel)
-        event = _State.lines[channel].line.event_read()
+    # if bouncetime and _State.lines[channel].timestamp and \
+    #         time.time() - _State.lines[channel].timestamp < bouncetime:
+    #     pass
+    # elif _State.lines[channel].line.event_wait(sec=timeout_sec, nsec=timeout_nsec):
+    #     _State.lines[channel].timestamp = time.time()
+    #     if channel not in _State.event_ls:
+    #         # Ensure no double appends. FIXME: should this be done outside of a poll thread?
+    #         _State.event_ls.append(channel)
+    #     event = _State.lines[channel].line.event_read()
 
         # A hack to clear the event buffer by reading a bunch of bytes
         # from the underlying file representing the GPIO line
-        eventfd = _State.lines[channel].line.event_get_fd()
+        # eventfd = _State.lines[channel].line.event_get_fd()
         # os.read(eventfd, 10000)
+
+    # libgpiod does not support debounce and may do so in future releases:
+    # https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/commit/?h=next/post-libgpiod-2.0
+    # 11.2021 -> https://lore.kernel.org/all/CAEdwc-Qm8hqvJhVLWeqLDYGL2mtH7S=TH=pwhzb5T-nMGD_ugw@mail.gmail.com/t/
+    # hence as a workaround debounce could be done around here untile the above becomes available
+
+    # wait for event
+    if _State.lines[channel].line.event_wait(sec=timeout_sec):
+        event = _State.lines[channel].line.event_read()
+        print(event)
+
         if event:
             ret = channel
 
